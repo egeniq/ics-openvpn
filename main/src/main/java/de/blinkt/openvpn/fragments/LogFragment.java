@@ -74,7 +74,6 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
     private static final String VERBOSITYLEVEL = "verbositylevel";
 
 
-
     private SeekBar mLogLevelSlider;
     private LinearLayout mOptionsLayout;
     private RadioGroup mTimeRadioGroup;
@@ -99,17 +98,12 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.radioISO:
-                ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_ISO);
-                break;
-            case R.id.radioNone:
-                ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_NONE);
-                break;
-            case R.id.radioShort:
-                ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_SHORT);
-                break;
-
+        if (checkedId == R.id.radioISO) {
+            ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_ISO);
+        } else if (checkedId == R.id.radioNone) {
+            ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_NONE);
+        } else if (checkedId == R.id.radioShort) {
+            ladapter.setTimeFormat(LogWindowListAdapter.TIME_FORMAT_SHORT);
         }
     }
 
@@ -216,7 +210,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
 
         @Override
         public long getItemId(int position) {
-            return ((Object) currentLevelEntries.get(position)).hashCode();
+            return ((Object)currentLevelEntries.get(position)).hashCode();
         }
 
         @Override
@@ -230,7 +224,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
             if (convertView == null)
                 v = new TextView(getActivity());
             else
-                v = (TextView) convertView;
+                v = (TextView)convertView;
 
             LogItem le = currentLevelEntries.get(position);
             String msg = le.getString(getActivity());
@@ -565,7 +559,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
                                            int position, long id) {
                 ClipboardManager clipboard = (ClipboardManager)
                         getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Log Entry", ((TextView) view).getText());
+                ClipData clip = ClipData.newPlainText("Log Entry", ((TextView)view).getText());
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(getActivity(), R.string.copied_entry, Toast.LENGTH_SHORT).show();
                 return true;
@@ -587,7 +581,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
 
         setListAdapter(ladapter);
 
-        mTimeRadioGroup = (RadioGroup) v.findViewById(R.id.timeFormatRadioGroup);
+        mTimeRadioGroup = (RadioGroup)v.findViewById(R.id.timeFormatRadioGroup);
         mTimeRadioGroup.setOnCheckedChangeListener(this);
 
         if (ladapter.mTimeFormat == LogWindowListAdapter.TIME_FORMAT_ISO) {
@@ -598,7 +592,7 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
             mTimeRadioGroup.check(R.id.radioShort);
         }
 
-        mClearLogCheckBox = (CheckBox) v.findViewById(R.id.clearlogconnect);
+        mClearLogCheckBox = (CheckBox)v.findViewById(R.id.clearlogconnect);
         mClearLogCheckBox.setChecked(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(LaunchVPN.CLEARLOG, true));
         mClearLogCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -607,10 +601,10 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
             }
         });
 
-        mSpeedView = (TextView) v.findViewById(R.id.speed);
+        mSpeedView = (TextView)v.findViewById(R.id.speed);
 
-        mOptionsLayout = (LinearLayout) v.findViewById(R.id.logOptionsLayout);
-        mLogLevelSlider = (SeekBar) v.findViewById(R.id.LogLevelSlider);
+        mOptionsLayout = (LinearLayout)v.findViewById(R.id.logOptionsLayout);
+        mLogLevelSlider = (SeekBar)v.findViewById(R.id.LogLevelSlider);
         mLogLevelSlider.setMax(VpnProfile.MAXLOGLEVEL - 1);
         mLogLevelSlider.setProgress(logLevel - 1);
 
@@ -619,9 +613,9 @@ public class LogFragment extends ListFragment implements StateListener, SeekBar.
         if (getResources().getBoolean(R.bool.logSildersAlwaysVisible))
             mOptionsLayout.setVisibility(View.VISIBLE);
 
-        mUpStatus = (TextView) v.findViewById(R.id.speedUp);
-        mDownStatus = (TextView) v.findViewById(R.id.speedDown);
-        mConnectStatus = (TextView) v.findViewById(R.id.speedStatus);
+        mUpStatus = (TextView)v.findViewById(R.id.speedUp);
+        mDownStatus = (TextView)v.findViewById(R.id.speedDown);
+        mConnectStatus = (TextView)v.findViewById(R.id.speedStatus);
         if (mShowOptionsLayout)
             mOptionsLayout.setVisibility(View.VISIBLE);
         return v;

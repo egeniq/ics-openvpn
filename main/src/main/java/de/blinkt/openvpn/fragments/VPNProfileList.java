@@ -77,7 +77,7 @@ public class VPNProfileList extends ListFragment implements OnClickListener, Vpn
         public View getView(final int position, View convertView, ViewGroup parent) {
             View v = super.getView(position, convertView, parent);
 
-            final VpnProfile profile = (VpnProfile) getListAdapter().getItem(position);
+            final VpnProfile profile = (VpnProfile)getListAdapter().getItem(position);
 
             View titleview = v.findViewById(R.id.vpn_list_item_left);
             titleview.setOnClickListener(new OnClickListener() {
@@ -97,7 +97,7 @@ public class VPNProfileList extends ListFragment implements OnClickListener, Vpn
                 }
             });
 
-            TextView subtitle = (TextView) v.findViewById(R.id.vpn_item_subtitle);
+            TextView subtitle = (TextView)v.findViewById(R.id.vpn_item_subtitle);
             if (ProfileManager.getLastConnectedVpn() == profile) {
                 subtitle.setText(mLastStatusMessage);
                 subtitle.setVisibility(View.VISIBLE);
@@ -174,14 +174,14 @@ public class VPNProfileList extends ListFragment implements OnClickListener, Vpn
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.vpn_profile_list, container, false);
 
-        TextView newvpntext = (TextView) v.findViewById(R.id.add_new_vpn_hint);
-        TextView importvpntext = (TextView) v.findViewById(R.id.import_vpn_hint);
+        TextView newvpntext = (TextView)v.findViewById(R.id.add_new_vpn_hint);
+        TextView importvpntext = (TextView)v.findViewById(R.id.import_vpn_hint);
 
         newvpntext.setText(Html.fromHtml(getString(R.string.add_new_vpn_hint), new MiniImageGetter(), null));
         importvpntext.setText(Html.fromHtml(getString(R.string.vpn_import_hint), new MiniImageGetter(), null));
 
-        ImageButton fab_add = (ImageButton) v.findViewById(R.id.fab_add);
-        ImageButton fab_import = (ImageButton) v.findViewById(R.id.fab_import);
+        ImageButton fab_add = (ImageButton)v.findViewById(R.id.fab_add);
+        ImageButton fab_import = (ImageButton)v.findViewById(R.id.fab_import);
         if (fab_add != null)
             fab_add.setOnClickListener(this);
 
@@ -268,13 +268,10 @@ public class VPNProfileList extends ListFragment implements OnClickListener, Vpn
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_import:
-                startImportConfigFilePicker();
-                break;
-            case R.id.fab_add:
-                onAddOrDuplicateProfile(null);
-                break;
+        if (v.getId() == R.id.fab_import) {
+            startImportConfigFilePicker();
+        } else if (v.getId() == R.id.fab_add) {
+            onAddOrDuplicateProfile(null);
         }
     }
 
