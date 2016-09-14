@@ -1,6 +1,5 @@
 build/
 main/libs/
-main/ovpnlibs/
 main/obj/
 .DS_Store
 .navigation
