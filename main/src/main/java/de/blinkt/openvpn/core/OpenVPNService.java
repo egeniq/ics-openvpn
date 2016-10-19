@@ -7,6 +7,7 @@ package de.blinkt.openvpn.core;
 
 import android.Manifest.permission;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -91,6 +92,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     // Added by EduVPN
     private String _lastLocalIpV4;
     private String _lastLocalIpV6;
+    private static Class _notificationActivityClass;
 
     // From: http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
     public static String humanReadableByteCount(long bytes, boolean mbit) {
@@ -100,7 +102,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         if (bytes < unit)
             return bytes + (mbit ? " bit" : " B");
 
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        int exp = (int)(Math.log(bytes) / Math.log(unit));
         String pre = (mbit ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (mbit ? "" : "");
         if (mbit)
             return String.format(Locale.getDefault(), "%.1f %sbit", bytes / Math.pow(unit, exp), pre);
@@ -149,7 +151,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     private void showNotification(final String msg, String tickerText, boolean lowpriority, long when, ConnectionStatus status) {
         String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+        NotificationManager mNotificationManager = (NotificationManager)getSystemService(ns);
 
 
         int icon = getIconByConnectionStatus(status);
@@ -213,7 +215,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     }
 
     private boolean runningOnAndroidTV() {
-        UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+        UiModeManager uiModeManager = (UiModeManager)getSystemService(UI_MODE_SERVICE);
         return uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
     }
 
@@ -285,7 +287,12 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     PendingIntent getLogPendingIntent() {
         // Let the configure Button show the Log
-        Intent intent = new Intent(getBaseContext(), LogWindow.class);
+        // --- Added by EduVPN --
+        Class activityClass = LogWindow.class;
+        if (_notificationActivityClass != null) {
+            activityClass = _notificationActivityClass;
+        }
+        Intent intent = new Intent(getBaseContext(), activityClass);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent startLW = PendingIntent.getActivity(this, 0, intent, 0);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -374,7 +381,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 Log.d("OpenVPN", "Got no last connected profile on null intent. Assuming always on.");
                 mProfile = ProfileManager.getAlwaysOnVPN(this);
 
-                if (mProfile==null) {
+                if (mProfile == null) {
                     stopSelf(startId);
                     return START_NOT_STICKY;
                 }
@@ -462,7 +469,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         {
 
             OpenVPNManagement mOpenVPN3 = instantiateOpenVPN3Core();
-            processThread = (Runnable) mOpenVPN3;
+            processThread = (Runnable)mOpenVPN3;
             mManagement = mOpenVPN3;
 
 
@@ -493,8 +500,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     private void stopOldOpenVPNProcess() {
         if (mManagement != null) {
-            if (mOpenVPNThread!=null)
-                ((OpenVPNThread) mOpenVPNThread).setReplaceConnection();
+            if (mOpenVPNThread != null)
+                ((OpenVPNThread)mOpenVPNThread).setReplaceConnection();
             if (mManagement.stopVPN(true)) {
                 // an old was asked to exit, wait 1s
                 try {
@@ -520,7 +527,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     private OpenVPNManagement instantiateOpenVPN3Core() {
         try {
             Class cl = Class.forName("de.blinkt.openvpn.core.OpenVPNThreadv3");
-            return (OpenVPNManagement) cl.getConstructor(OpenVPNService.class, VpnProfile.class).newInstance(this, mProfile);
+            return (OpenVPNManagement)cl.getConstructor(OpenVPNService.class, VpnProfile.class).newInstance(this, mProfile);
         } catch (IllegalArgumentException | InstantiationException | InvocationTargetException |
                 NoSuchMethodException | ClassNotFoundException | IllegalAccessException e) {
             e.printStackTrace();
@@ -849,7 +856,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         // Tun is opened after ROUTE6, no device name may be present
 
         try {
-            Inet6Address ip = (Inet6Address) InetAddress.getAllByName(v6parts[0])[0];
+            Inet6Address ip = (Inet6Address)InetAddress.getAllByName(v6parts[0])[0];
             int mask = Integer.parseInt(v6parts[1]);
             mRoutesv6.addIPv6(ip, mask, included);
 
@@ -1026,16 +1033,28 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     /**
      * Returns the lastly used IPv4 address used with the VPN.
+     *
      * @return The lastly used IPv4 address. This property is not cleared on disconnection.
      */
     public String getLastLocalIpV4Address() {
         return _lastLocalIpV4;
     }
+
     /**
      * Returns the lastly used IPv6 address used with the VPN.
+     *
      * @return The lastly used IPv6 address. This property is not cleared on disconnection.
      */
     public String getLastLocalIpV6Address() {
         return _lastLocalIpV6;
+    }
+
+    /**
+     * Sets the activity which should be opened when tapped on the permanent notification tile.
+     *
+     * @param activityClass The activity class to open
+     */
+    public static void setNotificationActivityClass(Class<? extends Activity> activityClass) {
+        _notificationActivityClass = activityClass;
     }
 }
