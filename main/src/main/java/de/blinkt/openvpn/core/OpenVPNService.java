@@ -41,6 +41,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import de.blinkt.openvpn.BuildConfig;
 import de.blinkt.openvpn.R;
@@ -86,6 +87,10 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     private Handler guiHandler;
     private Toast mlastToast;
     private Runnable mOpenVPNThread;
+
+    // Added by EduVPN
+    private String _lastLocalIpV4;
+    private String _lastLocalIpV6;
 
     // From: http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
     public static String humanReadableByteCount(long bytes, boolean mbit) {
@@ -474,16 +479,16 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         }
 
         new Handler(getMainLooper()).post(new Runnable() {
-                         @Override
-                         public void run() {
-                             if (mDeviceStateReceiver != null)
-                                 unregisterDeviceStateReceiver();
+                                              @Override
+                                              public void run() {
+                                                  if (mDeviceStateReceiver != null)
+                                                      unregisterDeviceStateReceiver();
 
-                             registerDeviceStateReceiver(mManagement);
-                         }
-                     }
+                                                  registerDeviceStateReceiver(mManagement);
+                                              }
+                                          }
 
-                );
+        );
     }
 
     private void stopOldOpenVPNProcess() {
@@ -688,6 +693,10 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             VpnStatus.logInfo(R.string.warn_no_dns);
 
         mLastTunCfg = getTunConfigString();
+
+        // Added by EduVPN -- store the IPs for future usage
+        _lastLocalIpV4 = mLocalIP == null ? null : mLocalIP.mIp;
+        _lastLocalIpV6 = (mLocalIPv6 != null && mLocalIPv6.contains("/")) ? mLocalIPv6.split(Pattern.quote("/"))[0] : mLocalIPv6;
 
         // Reset information
         mDnslist.clear();
@@ -1009,5 +1018,24 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             // Return this instance of LocalService so clients can call public methods
             return OpenVPNService.this;
         }
+    }
+
+    // ---------------------------------------
+    // The methods below were added by EduVPN.
+    // ---------------------------------------
+
+    /**
+     * Returns the lastly used IPv4 address used with the VPN.
+     * @return The lastly used IPv4 address. This property is not cleared on disconnection.
+     */
+    public String getLastLocalIpV4Address() {
+        return _lastLocalIpV4;
+    }
+    /**
+     * Returns the lastly used IPv6 address used with the VPN.
+     * @return The lastly used IPv6 address. This property is not cleared on disconnection.
+     */
+    public String getLastLocalIpV6Address() {
+        return _lastLocalIpV6;
     }
 }
