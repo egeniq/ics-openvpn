@@ -3,16 +3,16 @@ eduVPN fork of OpenVPN for Android
 
 eduVPN changes
 --------------
-* [Moved the native libraries from the app to this submodule](a095efa4361f2ac4f26581104b33ca8a21ce2de9)
-* [Added a static method which allows the app to open its own activity from the permanent notification](d83f545f466ea3b198bd88cf55d411a5f31a5955)
-* [Added two public methods to the service to get the latest local IPv4 and IPv6 address](88a6088d972acda9ade78563d12bca97f3820f28)
-* [Removed an incorrect annotation which made the lint checks fail](6365053f3cf6a28978066d928c851dd0f7558d90)
-* [Changed submodule links to HTTPS so they work without a GitHub account](5d816a1fcb3f3d050b98a467ca079a9a82050c40)
-* [Fixed an issue where going back from the log window would open the incorrect parent activity](52696fdf1712003e837f497ee13e95aae5b35a16)
-* [Simplified the build files to allow the project to be used as a library](71767b98930f226f85424bca5528dcd3e1830d4d)
-* [Converted the project to a library project](2564f05e0469edf7e28a3a11fd0e83e0e9513b85)
-* [Removed example code and some assets which were unrelated to the library](3e2cc1d94182651334c28ed54ac9673a5e5d2cc8)
-* [Added prebuilt native libraries](adb872390b9d2240b6ac2b5ad31abc430a402dd0)
+* [Moved the native libraries from the app to this submodule](https://github.com/egeniq/ics-openvpn/commit/a095efa4361f2ac4f26581104b33ca8a21ce2de9)
+* [Added a static method which allows the app to open its own activity from the permanent notification](https://github.com/egeniq/ics-openvpn/commit/d83f545f466ea3b198bd88cf55d411a5f31a5955)
+* [Added two public methods to the service to get the latest local IPv4 and IPv6 address](https://github.com/egeniq/ics-openvpn/commit/88a6088d972acda9ade78563d12bca97f3820f28)
+* [Removed an incorrect annotation which made the lint checks fail](https://github.com/egeniq/ics-openvpn/commit/6365053f3cf6a28978066d928c851dd0f7558d90)
+* [Changed submodule links to HTTPS so they work without a GitHub account](https://github.com/egeniq/ics-openvpn/commit/5d816a1fcb3f3d050b98a467ca079a9a82050c40)
+* [Fixed an issue where going back from the log window would open the incorrect parent activity](https://github.com/egeniq/ics-openvpn/commit/52696fdf1712003e837f497ee13e95aae5b35a16)
+* [Simplified the build files to allow the project to be used as a library](https://github.com/egeniq/ics-openvpn/commit/71767b98930f226f85424bca5528dcd3e1830d4d)
+* [Converted the project to a library project](https://github.com/egeniq/ics-openvpn/commit/2564f05e0469edf7e28a3a11fd0e83e0e9513b85)
+* [Removed example code and some assets which were unrelated to the library](https://github.com/egeniq/ics-openvpn/commit/3e2cc1d94182651334c28ed54ac9673a5e5d2cc8)
+* [Added prebuilt native libraries](https://github.com/egeniq/ics-openvpn/commit/adb872390b9d2240b6ac2b5ad31abc430a402dd0)
 
 Description
 ------------
