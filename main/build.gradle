@@ -27,6 +27,13 @@ android {
         versionName = "0.6.57"
     }
 
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', 'ovpnlibs/assets']
+            jniLibs.srcDirs = ['ovpnlibs/lib']
+        }
+    }
+
     lintOptions {
         enable 'BackButton', 'EasterEgg', 'StopShip', 'IconExpectedSize', 'GradleDynamicVersion', 'NewerVersionAvailable'
         disable 'MissingTranslation'
